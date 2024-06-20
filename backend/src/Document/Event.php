@@ -11,38 +11,53 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use App\Validator\ConstraintValidProgram;
 
+/**
+ * @MongoDB\Document(collection="events")
+ * @MongoDB\HasLifecycleCallbacks
+ */
 class Event extends AbstractConcurrencySafeDocument implements
     ConcurrencySafeDocumentInterface,
     EquatableDocumentInterface
 {
+    /**
+     * @var string
+     * @MongoDB\Id(strategy="UUID")
+     */
+    protected $id;
 
     /**
      * @var string
+     * @MongoDB\Field(type="string")
      */
     protected $key;
 
     /**
      * @var string
+     * @MongoDB\Field(type="string")
      */
     protected $name;
 
     /**
      * @var string[]
+     * @MongoDB\Field(type="collection")
      */
     protected $participants;
 
     /**
      * @var DateTimeInterface
+     * @MongoDB\Field(type="date")
      */
     protected $date;
 
     /**
      * @var Collection
-     * A collection of Speech objects
+     * @MongoDB\EmbedMany(targetDocument="Speech")
+     * @ConstraintValidProgram()
      */
     protected $program;
-
 
     public function __construct()
     {
@@ -53,20 +68,15 @@ class Event extends AbstractConcurrencySafeDocument implements
         $this->program = new ArrayCollection();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public static function getDocumentModelName(): string
+    public function getId(): ?string
     {
-        return EventModel::class;
+        return $this->id;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDocumentName(): string
+    public function setId(string $id): self
     {
-        return Event::class;
+        $this->id = $id;
+        return $this;
     }
 
     public function getKey(): string
@@ -124,9 +134,16 @@ class Event extends AbstractConcurrencySafeDocument implements
         return $this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public static function getDocumentModelName(): string
+    {
+        return EventModel::class;
+    }
+
+    public function getDocumentName(): string
+    {
+        return Event::class;
+    }
+
     public function isEqualTo(EquatableDocumentInterface $document): bool
     {
         return $document instanceof Event

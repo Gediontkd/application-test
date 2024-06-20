@@ -72,3 +72,7 @@ services:
 
     App\Service\QueryHelper\QueryHelper:
         public: true
+    
+   # Register the custom validator and tag it appropriately
+    App\Validator\ConstraintValidProgramValidator:
+        tags: ['validator.constraint_validator']

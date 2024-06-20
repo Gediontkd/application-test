@@ -12,26 +12,41 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 final class ConstraintValidProgramValidator extends ConstraintValidator
 {
-	public function __construct()
-	{
-	}
+    public function __construct()
+    {
+    }
 
-	public function validate($value, Constraint $constraint)
-	{
-		if (!$constraint instanceof ConstraintValidProgram) {
-			throw new UnexpectedTypeException($constraint, ConstraintValidProgram::class);
-		}
+    public function validate($value, Constraint $constraint)
+    {
+        if (!$constraint instanceof ConstraintValidProgram) {
+            throw new UnexpectedTypeException($constraint, ConstraintValidProgram::class);
+        }
 
-		if (!$value instanceof Event) {
-			throw new UnexpectedValueException($value, Event::class);
-		}
+        if (!$value instanceof Event) {
+            throw new UnexpectedValueException($value, Event::class);
+        }
 
-		// TODO: Ensure no overlapping speech times.
-		// At any given moment during the event, only one speech should be occurring.
-		// If overlaps are detected, add the following violation to the context 
-		// to display an appropriate error message to the API consumer.
-		$this->context
-			->buildViolation($constraint->overlappingSpeechesMessage)
-			->addViolation();
-	}
+        // Extract the program (speeches) from the event
+        $program = $value->getProgram();
+
+        // Sort speeches by their start times
+        $speeches = $program->toArray();
+        usort($speeches, function ($a, $b) {
+            return $a->getStartTime() <=> $b->getStartTime();
+        });
+
+        // Check for overlapping speeches
+        for ($i = 0; $i < count($speeches) - 1; $i++) {
+            $currentSpeechEndTime = $speeches[$i]->getEndTime();
+            $nextSpeechStartTime = $speeches[$i + 1]->getStartTime();
+
+            if ($currentSpeechEndTime > $nextSpeechStartTime) {
+                // Add a violation if there is an overlap
+                $this->context
+                    ->buildViolation($constraint->overlappingSpeechesMessage)
+                    ->addViolation();
+                return; // Stop further validation after finding an overlap
+            }
+        }
+    }
 }
