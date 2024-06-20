@@ -16,6 +16,7 @@ use App\Utility\MethodsBuilder;
 use GraphQL\Deferred;
 use App\Service\GraphQL\FieldEncryptionProvider;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use App\Service\GraphQL\GetByFieldValuesQueryArgumentsProvider;
 
 use function in_array;
@@ -88,20 +89,23 @@ final class EventResolver implements ResolverInterface
 
     private function resolveParticipants(Event $event, ArgumentInterface $args): array
     {
-        $queryString = $args['queryString'];
-        // TODO: 
-        // If queryString is provided, filter participants by it 
-        // and return all participants that contain the query string.
-        // The search should be case-insensitive.
-        // If the query string is not provided, return all participants.
-        return $event->getParticipants();
+        $participants = $event->getParticipants();
+        $queryString = $args->getRawArguments()['queryString'] ?? '';
+
+        if ($queryString) {
+            $queryString = strtolower($queryString);
+            $participants = array_filter($participants, function($participant) use ($queryString) {
+                return stripos($participant->getName(), $queryString) !== false;
+            });
+        }
+
+        return $participants;
     }
 
     private function resolveProgram(Event $event): Collection
     {
-        // TODO:
-        // Event::program is a collection of Speech objects.
-        // Return the event's program with the speeches sorted by startTime.
-        return $event->getProgram();
+        $program = $event->getProgram();
+        $criteria = Criteria::create()->orderBy(['startTime' => Criteria::ASC]);
+        return $program->matching($criteria);
     }
 }
