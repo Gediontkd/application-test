@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from "@apollo/client";
-import { Card, List } from "antd";
+import { Card, List, Spin, Alert } from "antd";
 import scheduleQuery from "./queries/scheduleQuery";
 import dayjs from "dayjs";
 import { SubsetInterface } from "../../../types/DataModelTypes/SubsetInterface";
@@ -9,13 +9,8 @@ import { EventInterface } from "../../../types/DataModelTypes/EventInterface";
 import Link from "next/link";
 
 export default function Schedule() {
-
-    // TODO: 
-    // Handle loading and error states:
-    // - Display a loading spinner or skeleton while the GraphQL query is being executed.
-    // - Show an error message if the GraphQL server response contains errors.
-
-    const { data } = useQuery<{ eventsSubset: SubsetInterface<EventInterface> }>(
+    // Use the useQuery hook to fetch data, including loading and error states
+    const { data, loading, error } = useQuery<{ eventsSubset: SubsetInterface<EventInterface> }>(
         scheduleQuery,
         {
             fetchPolicy: "network-only",
@@ -28,6 +23,32 @@ export default function Schedule() {
         }
     );
 
+    // Show a loading spinner while the data is being fetched
+    if (loading) {
+        return (
+            <Card>
+                <Spin tip="Loading...">
+                    <List />
+                </Spin>
+            </Card>
+        );
+    }
+
+    // Show an error message if there is an error fetching the data
+    if (error) {
+        return (
+            <Card>
+                <Alert
+                    message="Error"
+                    description="There was an error fetching the schedule data."
+                    type="error"
+                    showIcon
+                />
+            </Card>
+        );
+    }
+
+    // Render the list of events once the data is successfully fetched
     return (
         <Card>
             <List
