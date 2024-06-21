@@ -92,7 +92,7 @@ final class EventResolver implements ResolverInterface
         $participants = $event->getParticipants();
         $queryString = $args->getRawArguments()['queryString'] ?? '';
 
-        if ($queryString) {
+        if ($queryString !== '') {
             $queryString = strtolower($queryString);
             $participants = array_filter($participants, function($participant) use ($queryString) {
                 return stripos($participant->getName(), $queryString) !== false;
