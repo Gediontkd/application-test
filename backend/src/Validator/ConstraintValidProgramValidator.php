@@ -26,26 +26,23 @@ final class ConstraintValidProgramValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, Event::class);
         }
 
-        // Extract the program (speeches) from the event
         $program = $value->getProgram();
 
-        // Sort speeches by their start times
         $speeches = $program->toArray();
         usort($speeches, function ($a, $b) {
             return $a->getStartTime() <=> $b->getStartTime();
         });
 
-        // Check for overlapping speeches
         for ($i = 0; $i < count($speeches) - 1; $i++) {
             $currentSpeechEndTime = $speeches[$i]->getEndTime();
             $nextSpeechStartTime = $speeches[$i + 1]->getStartTime();
 
             if ($currentSpeechEndTime > $nextSpeechStartTime) {
-                // Add a violation if there is an overlap
+                
                 $this->context
                     ->buildViolation($constraint->overlappingSpeechesMessage)
                     ->addViolation();
-                return; // Stop further validation after finding an overlap
+                return;
             }
         }
     }

@@ -4,35 +4,36 @@ declare(strict_types=1);
 
 namespace App\Document;
 
-use App\Contract\Document\EmbeddedDocumentInterface;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
-class Speech implements EmbeddedDocumentInterface
+/**
+ * @MongoDB\EmbeddedDocument
+ */
+class Speech
 {
-
     /**
      * @var string
+     * @MongoDB\Field(type="string")
      */
     protected $topic;
 
     /**
      * @var string
+     * @MongoDB\Field(type="string")
      */
     protected $speaker;
 
     /**
      * @var int
-     * Start time in minutes from the beginning of the day
-     * (e.g. 0=midnight, 60=1am, 375=6.15pm)
+     * @MongoDB\Field(type="int")
      */
     protected $startTime;
 
     /**
      * @var int
-     * End time in minutes from the beginning of the day
-     * (e.g. 0=midnight, 60=1am, 375=6.15pm)
+     * @MongoDB\Field(type="int")
      */
     protected $endTime;
-
 
     public function __construct()
     {

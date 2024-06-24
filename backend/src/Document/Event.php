@@ -23,115 +23,46 @@ class Event extends AbstractConcurrencySafeDocument implements
     EquatableDocumentInterface
 {
     /**
-     * @var string
+     * @var ?string
      * @MongoDB\Id(strategy="UUID")
      */
-    protected $id;
+    protected ?string $id = null;
 
     /**
      * @var string
      * @MongoDB\Field(type="string")
      */
-    protected $key;
+    protected string $key = '';
 
     /**
      * @var string
      * @MongoDB\Field(type="string")
      */
-    protected $name;
+    protected string $name = '';
 
     /**
-     * @var string[]
+     * @var array
      * @MongoDB\Field(type="collection")
      */
-    protected $participants;
+    protected array $participants = [];
 
     /**
      * @var DateTimeInterface
      * @MongoDB\Field(type="date")
      */
-    protected $date;
+    protected DateTimeInterface $date;
 
     /**
      * @var Collection
      * @MongoDB\EmbedMany(targetDocument="Speech")
      * @ConstraintValidProgram()
      */
-    protected $program;
+    protected Collection $program;
 
     public function __construct()
     {
-        $this->key = '';
-        $this->name = '';
-        $this->participants = [];
         $this->date = new DateTime();
         $this->program = new ArrayCollection();
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(string $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getKey(): string
-    {
-        return $this->key;
-    }
-
-    public function setKey(string $key): self
-    {
-        $this->key = $key;
-        return $this;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getParticipants(): array
-    {
-        return $this->participants;
-    }
-
-    public function setParticipants(array $participants): self
-    {
-        $this->participants = $participants;
-        return $this;
-    }
-
-    public function getDate(): DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(DateTimeInterface $date): self
-    {
-        $this->date = $date;
-        return $this;
-    }
-
-    public function getProgram(): Collection
-    {
-        return $this->program;
-    }
-
-    public function setProgram(Collection $program): self
-    {
-        $this->program = $program;
-        return $this;
     }
 
     public static function getDocumentModelName(): string
@@ -149,4 +80,6 @@ class Event extends AbstractConcurrencySafeDocument implements
         return $document instanceof Event
             && $this->key === $document->getKey();
     }
+
+    // Getters and setters for key, name, participants, date, and program can be added here if needed
 }
