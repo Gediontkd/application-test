@@ -43,8 +43,8 @@ Mutation:
                 args:
                     input:
                         type: CreateEventInput!
-                # resolve: '@=mutation("App\\GraphQL\\Mutation\\EventMutations::createEvent", [args["input"]])'
-                resolve: "@=mutation('App\\Resolver\\CreateEventResolver', [args["input"]])"
+                resolve: '@=mutation("App\\GraphQL\\Mutation\\EventMutations::createEvent", [args["input"]])'
+                # resolve: "@=mutation('App\\Resolver\\CreateEventResolver', [args["input"]])"
             updateEvent:
                 type: EventPayload!
                 description: "Update an existing system event"
