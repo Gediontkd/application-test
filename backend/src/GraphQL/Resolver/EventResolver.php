@@ -16,7 +16,6 @@ use App\Utility\MethodsBuilder;
 use GraphQL\Deferred;
 use App\Service\GraphQL\FieldEncryptionProvider;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use App\Service\GraphQL\GetByFieldValuesQueryArgumentsProvider;
 
 use function in_array;
@@ -102,10 +101,8 @@ final class EventResolver implements ResolverInterface
         return $participants;
     }
 
-    private function resolveProgram(Event $event): Collection
+    private function resolveProgram(Event $event): array
     {
-        $program = $event->getProgram();
-        $criteria = Criteria::create()->orderBy(['startTime' => Criteria::ASC]);
-        return $program->matching($criteria);
+        return $event->getProgram()->toArray();
     }
 }

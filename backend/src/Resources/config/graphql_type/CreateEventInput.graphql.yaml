@@ -12,15 +12,3 @@ CreateEventInput:
                 type: "[String!]!"
             program:
                 type: "[SpeechInput!]!"
-SpeechInput:
-  type: input-object
-  config:
-    fields:
-      topic:
-        type: "String!"
-      speaker:
-        type: "String!"
-      startTime:
-        type: "Int!"
-      endTime:
-        type: "Int!"
