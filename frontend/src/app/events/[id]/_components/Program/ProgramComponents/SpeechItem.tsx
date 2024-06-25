@@ -1,9 +1,7 @@
-// frontend/src/app/events/[id]/_components/Program/ProgramComponents/SpeechItem.tsx
 
 import { List } from "antd";
-import Utility from "../../../../../../../src/lib/Utility"
-// import SpeechInterface
-import { SpeechInterface } from "../../../../../../../src/types/DataModelTypes/SpeechInterface"
+import Utility from "../../../../../../../src/lib/Utility";
+import { SpeechInterface } from "../../../../../../../src/types/DataModelTypes/SpeechInterface";
 
 interface SpeechItemProps {
     speech: SpeechInterface;
@@ -18,7 +16,7 @@ export default function SpeechItem({ speech }: SpeechItemProps) {
                     <>
                         <div>Speaker: {speech.speaker || "Unknown Speaker"}</div>
                         <div>
-                            Time: {speech.startTime ? Utility.formatTime(speech.startTime) : "N/A"} - {speech.endTime ? Utility.formatTime(speech.endTime) : "N/A"}
+                            Time: {speech.startTime !== undefined ? Utility.formatTime(speech.startTime) : "N/A"} - {speech.endTime !== undefined ? Utility.formatTime(speech.endTime) : "N/A"}
                         </div>
                     </>
                 }
