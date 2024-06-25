@@ -1,8 +1,9 @@
 // frontend/src/app/events/[id]/_components/Program/ProgramComponents/SpeechItem.tsx
 
 import { List } from "antd";
-import Utility from "../../../../../lib/Utility";
-import { SpeechInterface } from "../../../../../types/DataModelTypes/SpeechInterface";
+import Utility from "../../../../../../../src/lib/Utility"
+// import SpeechInterface
+import { SpeechInterface } from "../../../../../../../src/types/DataModelTypes/SpeechInterface"
 
 interface SpeechItemProps {
     speech: SpeechInterface;
